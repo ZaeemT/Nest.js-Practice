@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { CreatePeopleDto } from './dto/create-people.dto';
 import { UpdatePeopleDto } from './dto/update-people.dto';
 import { PeopleService } from './people.service';   
@@ -23,7 +23,11 @@ export class PeopleController {
     // GET /people/:id
     @Get(':id')
     getOnePerson( @Param('id') id: String ) {
-        return this.peopleService.getOnePerson(+id);
+        try {
+            return this.peopleService.getOnePerson(+id);
+        } catch (err) {
+            throw new NotFoundException();
+        }
     }
 
     // POST /people
