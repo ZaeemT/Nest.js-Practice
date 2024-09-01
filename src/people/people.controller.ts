@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Put, Query, ValidationPipe } from '@nestjs/common';
 import { CreatePeopleDto } from './dto/create-people.dto';
 import { UpdatePeopleDto } from './dto/update-people.dto';
 import { PeopleService } from './people.service';   
@@ -22,9 +22,9 @@ export class PeopleController {
 
     // GET /people/:id
     @Get(':id')
-    getOnePerson( @Param('id') id: String ) {
+    getOnePerson( @Param('id', ParseIntPipe) id: number ) {
         try {
-            return this.peopleService.getOnePerson(+id);
+            return this.peopleService.getOnePerson(id);
         } catch (err) {
             throw new NotFoundException();
         }
@@ -32,7 +32,7 @@ export class PeopleController {
 
     // POST /people
     @Post()
-    createPerson( @Body() createPersonDto: CreatePeopleDto) {
+    createPerson( @Body(new ValidationPipe()) createPersonDto: CreatePeopleDto) {
         return this.peopleService.createPerson(createPersonDto);
     }
 
