@@ -1,48 +1,46 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { CreatePeopleDto } from './dto/create-people.dto';
 import { UpdatePeopleDto } from './dto/update-people.dto';
+import { PeopleService } from './people.service';   
+
 
 @Controller('people')   // {{baseUrl}}/people/
 export class PeopleController {
+    constructor(private readonly peopleService: PeopleService) {}
 
     // GET /people --> []
-    @Get()
-    getPeople() {
-        return [];
-    }
-
-    // GET /people?type='slim' --> []
     // @Get()
-    // getPeople( @Query('type') type: String ) {
-    //     return [{type}];
+    // getPeople() {
+    //     return [];
     // }
+
+    // GET /people?weapon='...' --> []
+    @Get()
+    getPeople( @Query('weapon') weapon: 'stars' | 'katana' ) {
+        return this.peopleService.getPeople(weapon);
+    }
 
     // GET /people/:id
     @Get(':id')
     getOnePerson( @Param('id') id: String ) {
-        return {id};
+        return this.peopleService.getOnePerson(+id);
     }
 
     // POST /people
     @Post()
     createPerson( @Body() createPersonDto: CreatePeopleDto) {
-        return {
-            name: createPersonDto.name
-        };
+        return this.peopleService.createPerson(createPersonDto);
     }
 
     // PUT /people/:id
     @Put(':id')
     updatePerson( @Param('id') id: String, @Body() updatePersonDto: UpdatePeopleDto) {
-        return {
-            id,
-            name: UpdatePeopleDto.name
-        };
+        return this.peopleService.updatePerson(+id, updatePersonDto);
     }
 
     @Delete(':id')
     removePerson( @Param('id') id: String ) {
-        return {id};
+        return this.peopleService.removePerson(+id);
     }
 
 

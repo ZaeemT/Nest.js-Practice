@@ -1,3 +1,4 @@
 export class CreatePeopleDto {
-    name: String;
+    name: string;
+    weapon: 'stars' | 'katana' 
 }
