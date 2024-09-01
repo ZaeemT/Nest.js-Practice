@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Put, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Put, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { CreatePeopleDto } from './dto/create-people.dto';
 import { UpdatePeopleDto } from './dto/update-people.dto';
 import { PeopleService } from './people.service';   
+import { RoleGuard } from 'src/role/role.guard';
 
 
 @Controller('people')   // {{baseUrl}}/people/
+// @UseGuards(RoleGuard)   // Doing it here adds guard to whole controller
 export class PeopleController {
     constructor(private readonly peopleService: PeopleService) {}
 
@@ -32,6 +34,7 @@ export class PeopleController {
 
     // POST /people
     @Post()
+    @UseGuards(RoleGuard)
     createPerson( @Body(new ValidationPipe()) createPersonDto: CreatePeopleDto) {
         return this.peopleService.createPerson(createPersonDto);
     }
